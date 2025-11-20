@@ -1,0 +1,26 @@
+# 1. Export ShinyLive app
+shinylive::export(appdir = "LociTracker", destdir = "LociTracker_site", subdir = "data")
+
+# 2. Git operations
+repo <- repository(".")
+current_branch <- repository_head(repo)$name
+
+# Switch/create gh-pages
+if ("gh-pages" %in% names(branches(repo))) {
+  checkout(repo, "gh-pages")
+} else {
+  branch_create(repo, "gh-pages")
+  checkout(repo, "gh-pages")
+}
+
+# 3. Copy ShinyLive export to branch
+fs::dir_delete(".")        # optional: clear old files
+fs::dir_copy("LociTracker_site", ".", overwrite = TRUE)
+
+# 4. Commit & push
+add(repo, "*")
+commit(repo, "Update ShinyLive site")
+push(repo, "origin", "gh-pages")
+
+# 5. Return to main
+checkout(repo, current_branch)
