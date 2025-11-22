@@ -5,7 +5,7 @@ library(shiny)
 library(tidyverse)
 library(lubridate)
 library(DT)
-library(cowplot)s
+library(cowplot)
 library(patchwork)
 library(jsonlite)
 library(ggplot2)
