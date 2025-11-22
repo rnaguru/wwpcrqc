@@ -5,7 +5,7 @@ library(shiny)
 library(tidyverse)
 library(lubridate)
 library(DT)
-library(cowplot)
+library(cowplot)s
 library(patchwork)
 library(jsonlite)
 library(ggplot2)
@@ -22,7 +22,7 @@ library(zoo)    # for rollmean
 
 # --------------------------------------------------------------
 # Remote prefetched data location (GitHub)
-github_base <- "https://raw.githubusercontent.com/rnaguru/wwpcrqc/main/LociTracker_site/data"
+github_base <- "https://raw.githubusercontent.com/rnaguru/wwpcrqc/refs/heads/main/LociTracker/data"
 manifest_url <- paste0(github_base, "/manifest.json")
 manifest <- jsonlite::fromJSON(manifest_url)
 
