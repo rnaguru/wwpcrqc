@@ -1,0 +1,16 @@
+# 1. In R, Export ShinyLive app
+shinylive::export(appdir = "LociTracker", destdir = "LociTracker_site")
+
+
+#test locally
+# install.packages("servr")
+library(servr)
+
+# Serve the folder
+httw("LociTracker_site")
+
+
+#2, In git,opy Locitrcker_site to gh-page branch and overwrite
+git subtree split --prefix LociTracker_site -b gh-pages-build \
+&& git push origin gh-pages-build:gh-pages --force \
+&& git branch -D gh-pages-build

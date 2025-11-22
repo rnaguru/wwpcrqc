@@ -1,0 +1,12 @@
+name: LociTracker
+title: LociTracker
+username: rnaguru
+account: rnaguru
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16132799
+bundleId: 11214988
+url: https://rnaguru.shinyapps.io/LociTracker/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
