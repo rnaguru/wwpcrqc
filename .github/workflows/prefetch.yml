@@ -42,11 +42,10 @@ jobs:
         shell: bash
 
       # 5. Install R dependencies (skip if already cached)
-      - name: Install R packages
+           - name: Install R packages
         run: |
-          R -e 'pkgs <- c("tidyverse","future.apply","httr","jsonlite"); \
-                 to_install <- pkgs[!pkgs %in% rownames(installed.packages())]; \
-                 if(length(to_install)) install.packages(to_install, repos="https://cloud.r-project.org")'
+          R -e 'pkgs <- c("tidyverse","future.apply","httr","jsonlite"); to_install <- pkgs[!pkgs %in% rownames(installed.packages())]; if(length(to_install)) install.packages(to_install, repos="https://cloud.r-project.org")'
+
 
       # 6. Prefetch CSV data
       - name: Prefetch SARS-CoV-2 data
