@@ -15,12 +15,12 @@ jobs:
       R_MAX_CORES: 4
 
     steps:
-      # 1. Checkout only the latest commit
+      # 1. Checkout latest commit
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
-      # 2. Cache R packages to avoid reinstalling each run
+      # 2. Cache R packages
       - name: Cache R packages
         uses: actions/cache@v3
         with:
@@ -33,17 +33,26 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # 4. Install dependencies
-      - name: Install dependencies
+      # 4. Cache system dependencies
+      - name: Cache system dependencies
+        id: syscache
         run: |
-          R -e 'install.packages(c("tidyverse","future.apply","httr","jsonlite"), repos="https://cloud.r-project.org")'
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libfontconfig1-dev
+        shell: bash
 
-      # 5. Prefetch CSV data in parallel
+      # 5. Install R dependencies (skip if already cached)
+      - name: Install R packages
+        run: |
+          R -e 'pkgs <- c("tidyverse","future.apply","httr","jsonlite"); \
+                 to_install <- pkgs[!pkgs %in% rownames(installed.packages())]; \
+                 if(length(to_install)) install.packages(to_install, repos="https://cloud.r-project.org")'
+
+      # 6. Prefetch CSV data
       - name: Prefetch SARS-CoV-2 data
-        run: |
-          Rscript prefetch.R
+        run: Rscript prefetch.R
 
-      # 6. Commit and push only if files changed
+      # 7. Commit and push CSVs if changed
       - name: Commit & push CSVs
         run: |
           git config --global user.name "github-actions"
@@ -54,6 +63,5 @@ jobs:
             git push origin main --force
           else
             echo "No changes to commit."
-          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
