@@ -31,16 +31,16 @@ assays <- list(
     positions = c(26269:26294, 26332:26357, 26360:26381),
     wt = c(
       strsplit("ACAGGTACGTTAATAGTTAATAGCGT", "")[[1]],
-      strsplit("GTGACAGTTAAGGTTT", "")[[1]],
-      strsplit("GTTTGTTACGATTAAAGTTC", "")[[1]]
+      strsplit("ACACTAGCCATCCTTACTGCGCTTCG", "")[[1]],
+      strsplit("ATATTGCAGCAGTACGCACACA", "")[[1]]
     )
   ),
   N200 = list(
     positions = c(28840:28861, 28891:28905, 28940:28960),
     wt = c(
-      strsplit("GGGAGCCTTGAATACACCA", "")[[1]],
-      strsplit("TGGGCGGCAAAAGGCTT", "")[[1]],
-      strsplit("AGCTAGAGGCGTGATG", "")[[1]]
+      strsplit("TAGTCGCAACAGTTCAAGAAAT", "")[[1]],
+      strsplit("TCCTGCTAGAATGGC", "")[[1]],
+      strsplit("CTGGTTCAATCTGTCAAGCAG", "")[[1]]
     )
   )
 )
