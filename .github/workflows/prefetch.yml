@@ -27,7 +27,7 @@ jobs:
 
       # Run the Prefect R script
       - name: Run prefetch script
-        run: Rscript prefetch_qpcr.R
+        run: Rscript prefetch.R
 
  # 6. Commit and push only if files changed
       - name: Commit & push CSVs
