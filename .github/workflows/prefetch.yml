@@ -1,79 +1,42 @@
-name: Prefetch Lapis Data
+name: Prefetch SARS-CoV-2 qPCR Data
 
 on:
+  # Schedule: every Friday at 06:00 UTC
   schedule:
-    - cron: '0 2 * * 5'   # every Friday at 02:00 UTC
-  workflow_dispatch:      # allow manual trigger
+    - cron: '0 6 * * FRI'
+  # Manual trigger
+  workflow_dispatch:
 
 jobs:
-  prefetch:
+  run-prefetch:
     runs-on: ubuntu-latest
 
-    env:
-      R_LIBS_USER: ${{ github.workspace }}/R/libs
-      FUTURE_PLAN: multisession
-      R_MAX_CORES: 4
-
     steps:
-      # 1. Checkout only the latest commit
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-<<<<<<< HEAD
-      # 2. Cache R packages to avoid reinstalling each run
-=======
-      # 2. Cache R packages
->>>>>>> 6eb4256bb6740f6f116f2bcfecb56e808c6574d2
-      - name: Cache R packages
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-R-${{ hashFiles('prefetch.R') }}
-          restore-keys: |
-            ${{ runner.os }}-R-
-
-      # 3. Set up R
-<<<<<<< HEAD
+      # Set up R
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      # 4. Install dependencies
-      - name: Install dependencies
+      # Install dependencies
+      - name: Install R packages
         run: |
-          R -e 'install.packages(c("tidyverse","future.apply","httr","jsonlite"), repos="https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("tidyverse","future.apply","httr"), repos="https://cloud.r-project.org")'
 
-      # 5. Prefetch CSV data in parallel
-      - name: Prefetch SARS-CoV-2 data
-        run: |
-          Rscript prefetch.R
-=======
-      - uses: r-lib/actions/setup-r@v2
+      # Run the Prefect R script
+      - name: Run prefetch script
+        run: Rscript prefetch_qpcr.R
 
-      # 4. Install dependencies (including tidyverse) with system dependencies
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: tidyverse,future.apply,httr,jsonlite
-
-      # 5. Prefetch CSV data
-      - name: Prefetch SARS-CoV-2 data
-        run: Rscript prefetch.R
->>>>>>> 6eb4256bb6740f6f116f2bcfecb56e808c6574d2
-
-      # 6. Commit and push only if files changed
+ # 6. Commit and push only if files changed
       - name: Commit & push CSVs
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --global rnaguru "github-actions"
+          git config --global rnaguru@gmail.com "github-actions@github.com"
           git add LociTracker/data/prefetched_*.csv
           if ! git diff --cached --quiet; then
             git commit -m "Update prefetched SARS-CoV-2 mutation data"
             git push origin main --force
           else
             echo "No changes to commit."
-<<<<<<< HEAD
-          fi
-=======
->>>>>>> 6eb4256bb6740f6f116f2bcfecb56e808c6574d2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
