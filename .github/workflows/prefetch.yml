@@ -28,6 +28,8 @@ jobs:
             tidyverse
             future.apply
             httr
+            ggalt=hrbrmstr/ggalt
+            ggstream=davidsjoberg/ggstream
             
       # Run the Prefect R script
       - name: Run prefetch script
