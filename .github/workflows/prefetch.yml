@@ -31,18 +31,18 @@ jobs:
             ggalt=hrbrmstr/ggalt
             ggstream=davidsjoberg/ggstream
             
-      # Run the Prefect R script
+      # Run the Prefetch R script
       - name: Run prefetch script
         run: Rscript prefetch.R
 
- # 6. Commit and push only if files changed
+      # Commit and push only if files changed
       - name: Commit & push CSVs
         run: |
-          git config --global rnaguru "github-actions"
-          git config --global rnaguru@gmail.com "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
           git add LociTracker/data/prefetched_*.csv
           if ! git diff --cached --quiet; then
             git commit -m "Update prefetched SARS-CoV-2 mutation data"
-            git push origin main --force
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
           else
             echo "No changes to commit."
