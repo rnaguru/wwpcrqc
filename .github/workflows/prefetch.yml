@@ -1,5 +1,8 @@
 name: Prefetch SARS-CoV-2 qPCR Data
 
+permissions:
+  contents: write     # <-- REQUIRED so the action can push commits
+
 on:
   # Schedule: every Friday at 06:00 UTC
   schedule:
@@ -14,7 +17,10 @@ jobs:
     steps:
       # Checkout repository
       - name: Checkout repository
+      # IMPORTANT: fetch-depth: 0 ensures pushing works reliably
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       # Set up R
       - name: Set up R
@@ -30,7 +36,7 @@ jobs:
             httr
             ggalt=hrbrmstr/ggalt
             ggstream=davidsjoberg/ggstream
-            
+
       # Run the Prefetch R script
       - name: Run prefetch script
         run: Rscript prefetch.R
@@ -40,10 +46,12 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
+
           git add LociTracker/data/prefetched_*.csv
+
           if ! git diff --cached --quiet; then
             git commit -m "Update prefetched SARS-CoV-2 mutation data"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
           else
             echo "No changes to commit."
           fi
